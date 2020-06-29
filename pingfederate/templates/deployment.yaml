@@ -1,0 +1,100 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "pingfederate.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "pingfederate.name" . }}
+    helm.sh/chart: {{ include "pingfederate.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  {{- if and (.Values.pingfederate.clustering.enabled) (.Values.pingfederate.clustering.adminConsoleRole) }}
+  replicas: 1
+  {{ else }}
+  replicas: {{ .Values.replicaCount }}
+  {{ end }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "pingfederate.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "pingfederate.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        {{- if .Values.pingfederate.clustering.enabled}}
+        clusterIdentifier: {{ .Values.pingfederate.clustering.clusterIdentifier }}
+        {{- end }}
+    spec:
+      terminationGracePeriodSeconds: 300
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}/{{ .Values.image.name }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        {{ if not .Values.license.useDevOpsKey }}
+        volumeMounts:
+        - name: license
+          mountPath: /opt/in/instance/server/default/conf/pingfederate.lic
+          subPath: pingfederate.lic
+        {{ end -}}
+        ports:
+        {{- if or (and (.Values.pingfederate.clustering.enabled) (.Values.pingfederate.clustering.adminConsoleRole)) (not .Values.pingfederate.clustering.enabled) }}
+        - containerPort: {{ .Values.service.admin.port }}
+          name: {{ .Values.service.admin.name }}
+        {{- end -}}
+        {{- if or (and (.Values.pingfederate.clustering.enabled) (not .Values.pingfederate.clustering.adminConsoleRole)) (not .Values.pingfederate.clustering.enabled) }}
+        - containerPort: {{ .Values.service.runtime.port }}
+          name: {{ .Values.service.runtime.name }}
+        {{- end -}}
+        {{- if .Values.pingfederate.clustering.enabled}}
+        - containerPort: {{ .Values.pingfederate.clustering.service.clusterBind.port }}
+          name: {{ .Values.pingfederate.clustering.service.clusterBind.name }}
+        - containerPort: {{ .Values.pingfederate.clustering.service.clusterFailure.port }}
+          name: {{ .Values.pingfederate.clustering.service.clusterFailure.name }}
+        {{ end -}}
+        {{ if and (.Values.pingfederate.clustering.enabled) (.Values.pingfederate.clustering.adminConsoleRole) }}
+        #env:
+        #- name: OPERATIONAL_MODE
+        #  value: CLUSTERED_CONSOLE
+        {{ else if and (.Values.pingfederate.clustering.enabled) (not .Values.pingfederate.clustering.adminConsoleRole) }}
+        #env:
+        #- name: OPERATIONAL_MODE
+        #  value: CLUSTERED_ENGINE
+        {{ end }}
+        envFrom:
+        - configMapRef:
+            name: {{ include "pingfederate.fullname" . }}-env-vars
+        - secretRef:
+            name: {{ include "pingfederate.fullname" . }}-devops-secret
+            optional: true
+        - secretRef:
+            name: {{ include "pingfederate.fullname" . }}-git-secret
+            optional: true
+        readinessProbe:
+          exec:
+            command: [ {{ .Values.image.readinessCommand }} ]
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        livenessProbe:
+          exec:
+            command: [ {{ .Values.image.livenessCommand }} ]
+          initialDelaySeconds: 30
+          periodSeconds: 30
+    {{- if .Values.resources }}
+        resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- end }}
+    {{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+    {{- end }}
+    {{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 8 }}
+    {{- end }}
+    {{- if not .Values.license.useDevOpsKey }}
+      volumes:
+      - name: license
+        secret:
+          secretName: {{ .Values.license.licenseSecretName }}
+    {{- end }}

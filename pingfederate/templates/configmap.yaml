@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/name: {{ include "pingfederate.name" . }}
+    helm.sh/chart: {{ include "pingfederate.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+  name: {{ include "pingfederate.fullname" . }}-env-vars
+data:
+  PING_IDENTITY_ACCEPT_EULA: {{ .Values.license.acceptEULA | quote  }}
+  PF_LOG_LEVEL: {{ .Values.pingfederate.logging | quote }}
+{{ toYaml .Values.pingfederate.serverProfileEnvs | indent 2 }}
+  {{- if .Values.pingfederate.clustering.enabled }}
+  {{- if .Values.pingfederate.clustering.adminConsoleRole }}
+  OPERATIONAL_MODE: "CLUSTERED_CONSOLE"
+  {{- else }}
+  OPERATIONAL_MODE: "CLUSTERED_ENGINE"
+  {{- end }}
+  CLUSTER_BIND_ADDRESS: "NON_LOOPBACK"
+  CLUSTER_NAME: {{ .Values.pingfederate.clustering.clusterIdentifier | quote }}
+  DNS_QUERY_LOCATION: "{{ include "pingfederate.fullname" . }}-cluster-svc.{{ .Release.Namespace }}.svc.cluster.local"
+  DNS_RECORD_TYPE: "A"
+  {{ end -}}

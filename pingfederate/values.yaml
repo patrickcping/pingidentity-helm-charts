@@ -1,0 +1,103 @@
+# Default values for pingfederate.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: pingidentity
+  name: pingfederate
+  tag: edge # https://hub.docker.com/r/pingidentity/pingfederate/tags
+  pullPolicy: Always
+  # IfNotPresent
+  readinessCommand: /opt/liveness.sh
+  livenessCommand: /opt/liveness.sh
+
+pingfederate:
+  logging: INFO
+
+  serverProfileEnvs:
+    SERVER_PROFILE_URL: https://github.com/pingidentity/pingidentity-server-profiles.git 
+    SERVER_PROFILE_PATH: pf-dns-ping-clustering/pingfederate
+    SERVER_PROFILE_BRANCH: master
+    SERVER_PROFILE_PARENT: GETTING_STARTED
+
+    SERVER_PROFILE_GETTING_STARTED_URL: https://github.com/pingidentity/pingidentity-server-profiles.git 
+    SERVER_PROFILE_GETTING_STARTED_PATH: getting-started/pingfederate
+    SERVER_PROFILE_GETTING_STARTED_BRANCH: master
+
+
+  clustering:
+    enabled: false # If set to false, server will start in STANDALONE
+    adminConsoleRole: true # If true, server will start in CLUSTERED_CONSOLE mode.  If false, server will start in CLUSTERED_ENGINE mode.  If CLUSTERED_CONSOLE, replicaCount will be overridden to 1
+    clusterIdentifier: pf-cluster # This is used as a k8s selector to allow nodes from different deployments to discover each other
+    service:
+      clusterBind:
+        port: 7600
+        name: pf-clusterb
+      clusterFailure:
+        port: 7700
+        name: pf-clusterf
+
+license:
+  acceptEULA: false
+  licenseSecretName: pingfederate-license
+  # Using the devops key is best suited to development or sandbox environments.  In other cases create a license secret
+  useDevOpsKey: false
+  devOpsKey:
+    user: 
+    key: 
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  admin:
+    port: 9999
+    name: pf-admin
+  runtime:
+    port: 9031
+    name: pf-runtime
+
+ingress:
+  enabled: false
+  # annotations:
+  #   nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+  #   kubernetes.io/ingress.class: "nginx-public"
+
+  # hosts:
+  #   - host: my.host.pingfederate.host.com
+  #     paths:
+  #     - path: /pingfederate
+  #       backend:
+  #         servicePort: 9999
+  #     - path: /pf-admin-api
+  #       backend:
+  #           servicePort: 9999
+  #     - path: /
+  #       backend:
+  #         servicePort: 9031
+
+  # The following section adds TLS specific configuration for the ingress descriptor.  Example:
+  # tls:
+  #   - secretName: tls-secret
+  #     hosts:
+  #       - my.host.pingfederate.host.com
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+

@@ -1,0 +1,23 @@
+{{- if and (.Values.pingfederate.clustering.enabled) (not .Values.pingfederate.clustering.adminConsoleRole) }}
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+  name: {{ include "pingfederate.fullname" . }}-cluster-svc
+  labels:
+    app.kubernetes.io/name: {{ include "pingfederate.name" . }}
+    helm.sh/chart: {{ include "pingfederate.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  publishNotReadyAddresses: true
+  clusterIP: None
+  ports:
+    - name: {{ .Values.pingfederate.clustering.service.clusterBind.name }}
+      port: {{ .Values.pingfederate.clustering.service.clusterBind.port }}
+      protocol: TCP
+      targetPort: {{ .Values.pingfederate.clustering.service.clusterBind.port }}
+  selector:
+     clusterIdentifier: {{ .Values.pingfederate.clustering.clusterIdentifier }}
+{{- end }}

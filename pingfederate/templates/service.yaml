@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "pingfederate.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "pingfederate.name" . }}
+    helm.sh/chart: {{ include "pingfederate.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    {{- if or (and (.Values.pingfederate.clustering.enabled) (.Values.pingfederate.clustering.adminConsoleRole)) (not .Values.pingfederate.clustering.enabled) }}
+    - port: {{ .Values.service.admin.port }}
+      targetPort: {{ .Values.service.admin.port }}
+      protocol: TCP
+      name: {{ .Values.service.admin.name }}
+    {{ end }}
+    {{- if or (and (.Values.pingfederate.clustering.enabled) (not .Values.pingfederate.clustering.adminConsoleRole)) (not .Values.pingfederate.clustering.enabled) }}
+    - port: {{ .Values.service.runtime.port }}
+      targetPort: {{ .Values.service.runtime.port }}
+      protocol: TCP
+      name: {{ .Values.service.runtime.name }}
+    {{ end }}
+  selector:
+    app.kubernetes.io/name: {{ include "pingfederate.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
