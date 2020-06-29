@@ -4,19 +4,19 @@ This repository provides sample Helm charts for Ping Identity products for commu
 
 These helm charts are not in a finished or production-ready state, but are intended to be a good starting point and can be used and altered as required.
 
-Note: These charts are development / POC quality and originally put together as a learning experience.  Pull requests welcome but don't expect a quick response!
+Note: These charts are development / POC quality and originally put together as a learning experience.  Pull requests and issues welcome but don't expect a quick response!
 
 ## Charts
 
-| Chart | Status |
-|--|--|
-| PingFederate | Available (Beta) |
-| PingAccess | Not available |
-| PingDirectory | Not available |
-| PingDelegator | Not available |
-| PingCentral | Not available |
-| PingDataConsole | Not available |
-| PingDataGovernance | Not available |
-| PingDataGovernance PAP | Not available |
-| PingDataSync | Not available |
-| PingDirectoryProxy | Not available |
+| Chart | Status | Clustering options in chart |
+|--|--|--|
+| PingFederate | Available (Beta) | Yes |
+| PingAccess | Available (Beta) | No |
+| PingDirectory | Not available | N/a |
+| PingDelegator | Not available | N/a |
+| PingCentral | Not available | N/a |
+| PingDataConsole | Not available | N/a |
+| PingDataGovernance | Not available | N/a |
+| PingDataGovernance PAP | Not available | N/a |
+| PingDataSync | Not available | N/a |
+| PingDirectoryProxy | Not available | N/a |

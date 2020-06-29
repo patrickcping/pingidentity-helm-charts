@@ -1,7 +1,7 @@
 # PingFederate
 
 ## Use Devops Key
-In a development or sandbox environment, the helm chart can be run with a valid registered devops license key (https://pingidentity-devops.gitbook.io/devops/getstarted/devopsregistration).  Make sure the PING_IDENTITY_DEVOPS_USER and PING_IDENTITY_DEVOPS_KEY environment variables are set
+In a development or sandbox environment, the helm chart can be run with a valid registered devops license key (https://pingidentity-devops.gitbook.io/devops/getstarted/devopsregistration).  Make sure the `PING_IDENTITY_DEVOPS_USER` and `PING_IDENTITY_DEVOPS_KEY` environment variables are set
 
 ```shell
 helm install \
@@ -23,14 +23,26 @@ helm install \
 --generate-name --debug \
 --set license.licenseSecretName=pingfederate-license
 --set license.acceptEULA=yes \
- pingfederate
+ ./
 ```
 
-## Configuration
+## Chart Configuration
 
 | Parameter | Description | Default |
-|--|--|
+|--|--|--|
 | TODO | TODO | TODO |
+
+
+## PingFederate Configuration Profile
+
+By default this chart loads sample PingFederate configuration on startup.  These are layered as:
+
+| Configuration Layer | Server Profile |
+|--|--|
+| 1 | https://github.com/pingidentity/pingidentity-server-profiles/tree/master/pf-dns-ping-clustering |
+| 2 | https://github.com/pingidentity/pingidentity-server-profiles/tree/master/getting-started/pingfederate |
+
+You can add additional layers or change to your own configuration repository by modifying the `SERVER_PROFILE_*` environment variables in `pingfederate.envs` of the chart configuration
 
 ## Clustering Example
 

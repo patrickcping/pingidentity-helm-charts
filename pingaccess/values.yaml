@@ -1,4 +1,4 @@
-# Default values for pingfederate.
+# Default values for pingaccess.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -6,41 +6,24 @@ replicaCount: 1
 
 image:
   repository: pingidentity
-  name: pingfederate
-  tag: edge # https://hub.docker.com/r/pingidentity/pingfederate/tags
+  name: pingaccess
+  tag: edge # https://hub.docker.com/r/pingidentity/pingaccess/tags
   pullPolicy: Always
   # IfNotPresent
   readinessCommand: /opt/liveness.sh
   livenessCommand: /opt/liveness.sh
 
-pingfederate:
+pingaccess:
   logging: INFO
 
   envs:
     SERVER_PROFILE_URL: https://github.com/pingidentity/pingidentity-server-profiles.git 
-    SERVER_PROFILE_PATH: pf-dns-ping-clustering/pingfederate
+    SERVER_PROFILE_PATH: getting-started/pingaccess
     SERVER_PROFILE_BRANCH: master
-    SERVER_PROFILE_PARENT: GETTING_STARTED
-
-    SERVER_PROFILE_GETTING_STARTED_URL: https://github.com/pingidentity/pingidentity-server-profiles.git 
-    SERVER_PROFILE_GETTING_STARTED_PATH: getting-started/pingfederate
-    SERVER_PROFILE_GETTING_STARTED_BRANCH: master
-
-  clustering:
-    enabled: false # If set to false, server will start in STANDALONE
-    adminConsoleRole: true # If true, server will start in CLUSTERED_CONSOLE mode.  If false, server will start in CLUSTERED_ENGINE mode.  If CLUSTERED_CONSOLE, replicaCount will be overridden to 1
-    clusterIdentifier: pf-cluster # This is used as a k8s selector to allow nodes from different deployments to discover each other
-    service:
-      clusterBind:
-        port: 7600
-        name: pf-clusterb
-      clusterFailure:
-        port: 7700
-        name: pf-clusterf
 
 license:
   acceptEULA: false
-  licenseSecretName: pingfederate-license
+  licenseSecretName: pingaccess-license
   # Using the devops key is best suited to development or sandbox environments.  In other cases create a license secret
   useDevOpsKey: false
   devOpsKey:
@@ -53,11 +36,11 @@ fullnameOverride: ""
 service:
   type: ClusterIP
   admin:
-    port: 9999
-    name: pf-admin
+    port: 9000
+    name: pa-admin
   runtime:
-    port: 9031
-    name: pf-runtime
+    port: 3000
+    name: pa-runtime
 
 ingress:
   enabled: false
@@ -66,23 +49,25 @@ ingress:
   #   kubernetes.io/ingress.class: "nginx-public"
 
   # hosts:
-  #   - host: my.host.pingfederate.host.com
+  #   - host: my.host.pingaccess.host.com
   #     paths:
-  #     - path: /pingfederate
-  #       backend:
-  #         servicePort: 9999
-  #     - path: /pf-admin-api
-  #       backend:
-  #           servicePort: 9999
   #     - path: /
   #       backend:
-  #         servicePort: 9031
+  #         servicePort: 3000
+  #   - host: my.host.admin.pingaccess.host.com
+  #     paths:
+  #     - path: /
+  #       backend:
+  #         servicePort: 9000
 
   # The following section adds TLS specific configuration for the ingress descriptor.  Example:
   # tls:
+  #   - secretName: tls-secret-admin
+  #     hosts:
+  #       - my.host.admin.pingaccess.host.com
   #   - secretName: tls-secret
   #     hosts:
-  #       - my.host.pingfederate.host.com
+  #       - my.host.pingaccess.host.com
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -100,3 +85,4 @@ nodeSelector: {}
 
 tolerations: []
 
+affinity: {}

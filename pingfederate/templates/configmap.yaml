@@ -10,7 +10,7 @@ metadata:
 data:
   PING_IDENTITY_ACCEPT_EULA: {{ .Values.license.acceptEULA | quote  }}
   PF_LOG_LEVEL: {{ .Values.pingfederate.logging | quote }}
-{{ toYaml .Values.pingfederate.serverProfileEnvs | indent 2 }}
+{{ toYaml .Values.pingfederate.envs | indent 2 }}
   {{- if .Values.pingfederate.clustering.enabled }}
   {{- if .Values.pingfederate.clustering.adminConsoleRole }}
   OPERATIONAL_MODE: "CLUSTERED_CONSOLE"

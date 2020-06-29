@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "pingaccess.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "pingaccess.name" . }}
+    helm.sh/chart: {{ include "pingaccess.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.admin.port }}
+      targetPort: {{ .Values.service.admin.port }}
+      protocol: TCP
+      name: {{ .Values.service.admin.name }}
+    - port: {{ .Values.service.runtime.port }}
+      targetPort: {{ .Values.service.runtime.port }}
+      protocol: TCP
+      name: {{ .Values.service.runtime.name }}
+  selector:
+    app.kubernetes.io/name: {{ include "pingaccess.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
