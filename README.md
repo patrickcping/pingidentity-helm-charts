@@ -8,15 +8,15 @@ Note: These charts are development / POC quality and originally put together as 
 
 ## Charts
 
-| Chart | Status | Clustering options in chart |
-|--|--|--|
-| PingFederate | Available (Beta) | Yes |
-| PingAccess | Available (Beta) | No |
-| PingDirectory | Not available | N/a |
-| PingDelegator | Not available | N/a |
-| PingCentral | Not available | N/a |
-| PingDataConsole | Not available | N/a |
-| PingDataGovernance | Not available | N/a |
-| PingDataGovernance PAP | Not available | N/a |
-| PingDataSync | Not available | N/a |
-| PingDirectoryProxy | Not available | N/a |
+| Chart | Capability | Status | Scalable |
+|--|--|--|--|
+| PingFederate | SSO / Authentication Authority | Available (Beta) | Yes |
+| PingAccess | Medium/Course grain Authorisation Gateway / PEP | Available (Beta) | No (TBC) |
+| PingDirectory | User/Device/Consent/Organisation Directory | Available (Beta) | Yes |
+| PingDelegator | Delegated User Management UI | In progress | N/a |
+| PingCentral | Delegated Application Management UI | In progress | N/a |
+| PingDataConsole | PingData Admin Console | Available (Beta) | Not required |
+| PingDataGovernance | Fine-grain Authorisation PDP | Not available | N/a |
+| PingDataGovernance PAP | Fine-grain Authz PAP | Not available | N/a |
+| PingDataSync | Data Synchronisation Engine | Not available | N/a |
+| PingDirectoryProxy | Directory Proxy | Not available | N/a |

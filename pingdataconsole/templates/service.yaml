@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ if .Values.service.customName }}{{ .Values.service.customName }}{{- else }}{{ include "pingdataconsole.fullname" . }}{{- end }}
+  labels:
+    app.kubernetes.io/name: {{ include "pingdataconsole.name" . }}
+    helm.sh/chart: {{ include "pingdataconsole.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.http.port }}
+      targetPort: {{ .Values.service.http.port }}
+      protocol: TCP
+      name: {{ .Values.service.http.name }}
+  selector:
+    app.kubernetes.io/name: {{ include "pingdataconsole.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}

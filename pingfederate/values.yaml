@@ -9,7 +9,6 @@ image:
   name: pingfederate
   tag: edge # https://hub.docker.com/r/pingidentity/pingfederate/tags
   pullPolicy: Always
-  # IfNotPresent
   readinessCommand: /opt/liveness.sh
   livenessCommand: /opt/liveness.sh
 

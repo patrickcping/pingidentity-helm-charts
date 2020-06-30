@@ -1,0 +1,59 @@
+# Default values for pingdirectory.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+nameOverride: ""
+fullnameOverride: ""
+
+replicaCount: 1
+
+image:
+  repository: pingidentity
+  name: pingdataconsole
+  tag: edge
+  pullPolicy: Always
+  readinessCommand: /opt/liveness.sh
+  livenessCommand: /opt/liveness.sh
+  
+service:
+  type: ClusterIP
+  http:
+    port: 8080
+    name: http
+
+ingress:
+  enabled: false
+  # annotations:
+  #   nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+  #   kubernetes.io/ingress.class: "nginx-public"
+
+  # hosts:
+  #   - host: my.host.admin.pingdata.host.com
+  #     paths:
+  #     - path: /
+  #       backend:
+  #         servicePort: 8080
+
+  # The following section adds TLS specific configuration for the ingress descriptor.  Example:
+  # tls:
+  #   - secretName: tls-secret-pingdata-admin
+  #     hosts:
+  #       - my.host.admin.pingdata.host.com
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 0.2
+  #   memory: 512Mi
+  # requests:
+  #   cpu: 0.2
+  #   memory: 512Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

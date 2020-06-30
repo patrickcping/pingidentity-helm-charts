@@ -1,4 +1,4 @@
-# Default values for pingaccess.
+# Default values for pingdirectory.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -6,23 +6,24 @@ replicaCount: 1
 
 image:
   repository: pingidentity
-  name: pingaccess
-  tag: edge # https://hub.docker.com/r/pingidentity/pingaccess/tags
+  name: pingdirectory
+  tag: edge # https://hub.docker.com/r/pingidentity/pingfederate/tags
   pullPolicy: Always
   readinessCommand: /opt/liveness.sh
   livenessCommand: /opt/liveness.sh
 
-pingaccess:
+pingdirectory:
   logging: INFO
 
   envs:
     SERVER_PROFILE_URL: https://github.com/pingidentity/pingidentity-server-profiles.git 
-    SERVER_PROFILE_PATH: getting-started/pingaccess
+    SERVER_PROFILE_PATH: getting-started/pingdirectory
     SERVER_PROFILE_BRANCH: master
-
+    MAX_HEAP_SIZE: 768m
+  
 license:
   acceptEULA: false
-  licenseSecretName: pingaccess-license
+  licenseSecretName: pingdirectory-license
   # Using the devops key is best suited to development or sandbox environments.  In other cases create a license secret
   useDevOpsKey: false
   devOpsKey:
@@ -33,13 +34,22 @@ nameOverride: ""
 fullnameOverride: ""
 
 service:
+  customName: pingdirectory
   type: ClusterIP
-  admin:
-    port: 9000
-    name: pa-admin
-  runtime:
-    port: 3000
-    name: pa-runtime
+  https:
+    port: 443
+    name: https
+  ldaps:
+    port: 636
+    name: ldaps
+  ldap:
+    port: 389
+    name: ldap
+
+persistentvolume:
+  enabled: true
+  storage: 8Gi
+  storageClassName: standard
 
 ingress:
   enabled: false
@@ -48,25 +58,17 @@ ingress:
   #   kubernetes.io/ingress.class: "nginx-public"
 
   # hosts:
-  #   - host: my.host.pingaccess.host.com
+  #   - host: my.host.pingdata.host.com
   #     paths:
   #     - path: /
   #       backend:
-  #         servicePort: 3000
-  #   - host: my.host.admin.pingaccess.host.com
-  #     paths:
-  #     - path: /
-  #       backend:
-  #         servicePort: 9000
+  #         servicePort: 443
 
   # The following section adds TLS specific configuration for the ingress descriptor.  Example:
   # tls:
-  #   - secretName: tls-secret-admin
-  #     hosts:
-  #       - my.host.admin.pingaccess.host.com
   #   - secretName: tls-secret
   #     hosts:
-  #       - my.host.pingaccess.host.com
+  #       - my.host.pingdata.host.com
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -74,14 +76,12 @@ resources: {}
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   # limits:
-  #   cpu: 1
-  #   memory: 1.5Gi
+  #   cpu: 1.5
+  #   memory: 2Gi
   # requests:
-  #   cpu: 1
-  #   memory: 1.5Gi
+  #   cpu: 1.5
+  #   memory: 2Gi
 
 nodeSelector: {}
 
 tolerations: []
-
-affinity: {}

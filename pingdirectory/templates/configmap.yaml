@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/name: {{ include "pingdirectory.name" . }}
+    helm.sh/chart: {{ include "pingdirectory.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+  name: {{ include "pingdirectory.fullname" . }}-env-vars
+data:
+  PING_IDENTITY_ACCEPT_EULA: {{ .Values.license.acceptEULA | quote  }}
+  PD_LOG_LEVEL: {{ .Values.pingdirectory.logging | quote }}
+{{ toYaml .Values.pingdirectory.envs | indent 2 }}
