@@ -60,7 +60,3 @@ By default this chart loads sample PingDelegator configuration on startup.  Thes
 | 1 | https://github.com/pingidentity/pingidentity-server-profiles/tree/master/baseline/pingdelegator |
 
 You can add additional layers or change to your own configuration repository by modifying the `SERVER_PROFILE_*` environment variables in `pingdelegator.envs` of the chart configuration
-
-## Testing
-
-Tested with **PingDelegator 4.2**

@@ -79,7 +79,3 @@ pingfederate-runtime --debug \
 --set license.acceptEULA=yes \
 pingidentity-pc/pingfederate
 ```
-
-## Testing
-
-Tested with **PingFederate 10.1**

@@ -47,7 +47,3 @@ By default this chart loads sample PingDirectory configuration on startup.  Thes
 | 1 | https://github.com/pingidentity/pingidentity-server-profiles/tree/master/getting-started/pingdirectory |
 
 You can add additional layers or change to your own configuration repository by modifying the `SERVER_PROFILE_*` environment variables in `pingdirectory.envs` of the chart configuration
-
-## Testing
-
-Tested with **PingDirectory 8.1**

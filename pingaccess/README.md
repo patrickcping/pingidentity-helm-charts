@@ -58,7 +58,3 @@ TBC
 ```shell
 TBC
 ```
-
-## Testing
-
-Tested with **PingAccess 6.1**
