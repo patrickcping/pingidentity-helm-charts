@@ -1,0 +1,15 @@
+apiVersion: v1
+appVersion: "1.4"
+description: A Sample PingCentral Helm chart
+name: pingcentral
+version: 0.1.0
+home: https://www.pingidentity.com/
+sources:
+- https://github.com/patrickcping/pingidentity-helm-charts
+- https://github.com/pingidentity/pingidentity-docker-builds
+- https://github.com/pingidentity/pingidentity-server-profiles
+dependencies:
+- name: mysql
+  version: ^6.14.4
+  repository: "https://charts.bitnami.com/bitnami"
+  condition: mysql.enabled

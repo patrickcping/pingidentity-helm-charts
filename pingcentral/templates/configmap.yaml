@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/name: {{ include "pingcentral.name" . }}
+    helm.sh/chart: {{ include "pingcentral.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+  name: {{ include "pingcentral.fullname" . }}-env-vars
+data:
+{{- if .Values.mysql.enabled }}
+  MYSQL_USER: {{ .Values.mysql.db.user | quote  }}
+  MYSQL_PASSWORD: {{ .Values.mysql.db.password | quote  }}
+  MYSQL_SERVICE_HOST: "{{ .Release.Name }}-mysql"
+  MYSQL_SERVICE_PORT: {{ .Values.mysql.service.port | quote }}
+  MYSQL_DATABASE: {{ .Values.mysql.db.name | quote }}
+{{- end }}
+  PING_IDENTITY_ACCEPT_EULA: {{ .Values.license.acceptEULA | quote  }}
+  PING_CENTRAL_LOG_LEVEL: {{ .Values.pingcentral.logging | quote }}
+  PING_CENTRAL_BLIND_TRUST: {{ .Values.pingcentral.tlsBlindTrust | quote }}
+  PING_CENTRAL_VERIFY_HOSTNAME: {{ .Values.pingcentral.tlsVerifyHostnames | quote }}
+{{ toYaml .Values.pingcentral.envs | indent 2 }}

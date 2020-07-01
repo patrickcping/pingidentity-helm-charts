@@ -1,0 +1,96 @@
+# Default values for pingcentral.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: pingidentity
+  name: pingcentral
+  tag: 2006-1.4.0
+  pullPolicy: IfNotPresent
+  readinessCommand: /opt/liveness.sh
+  livenessCommand: /opt/liveness.sh
+
+pingcentral:
+
+  logging: INFO
+
+  tlsBlindTrust: false
+  tlsVerifyHostnames: true
+
+  envs:
+    SERVER_PROFILE_URL: https://github.com/pingidentity/pingidentity-server-profiles.git 
+    SERVER_PROFILE_PATH: baseline/pingcentral/logging
+    SERVER_PROFILE_BRANCH: master
+    SERVER_PROFILE_PARENT: DATA
+
+    SERVER_PROFILE_DATA_URL: https://github.com/patrickcping/pingidentity-server-profiles.git
+    SERVER_PROFILE_DATA_PATH: baseline/pingcentral/external-mysql-db
+    SERVER_PROFILE_DATA_BRANCH: master
+
+license:
+  acceptEULA: false
+  licenseSecretName: pingcentral-license
+  # Using the devops key is best suited to development or sandbox environments.  In other cases create a license secret
+  useDevOpsKey: false
+  devOpsKey:
+    user: 
+    key: 
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  https:
+    port: 9022
+    name: https
+
+ingress:
+  enabled: false
+  # annotations:
+  #   nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+  #   kubernetes.io/ingress.class: "nginx-public"
+
+  # hosts:
+  #   - host: my.host.pingcentral.host.com
+  #     paths:
+  #     - path: /
+  #       backend:
+  #         servicePort: 6443
+
+  # The following section adds TLS specific configuration for the ingress descriptor.  Example:
+  # tls:
+  #   - secretName: tls-secret
+  #     hosts:
+  #       - my.host.pingcentral.host.com
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 0.2
+  #   memory: 512Mi
+  # requests:
+  #   cpu: 0.2
+  #   memory: 512Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+mysql:
+  enabled: true
+
+  root:
+    password: 2Federate
+
+  db:
+    user: pingcentral
+    password: 2Federate
+    name: pingcentral
