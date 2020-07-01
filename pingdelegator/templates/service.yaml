@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "pingdelegator.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "pingdelegator.name" . }}
+    helm.sh/chart: {{ include "pingdelegator.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.runtime.port }}
+      targetPort: {{ .Values.service.runtime.port }}
+      protocol: TCP
+      name: {{ .Values.service.runtime.name }}
+  selector:
+    app.kubernetes.io/name: {{ include "pingdelegator.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}

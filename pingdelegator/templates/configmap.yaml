@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/name: {{ include "pingdelegator.name" . }}
+    helm.sh/chart: {{ include "pingdelegator.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+  name: {{ include "pingdelegator.fullname" . }}-env-vars
+data:
+  PD_DELEGATOR_PUBLIC_HOSTNAME: {{ .Values.pingdelegator.publicHostname | quote  }}
+  PF_ENGINE_PUBLIC_HOSTNAME: {{ .Values.pingdelegator.tokenProvider.hostname | quote  }}
+  PF_ENGINE_PUBLIC_PORT: {{ .Values.pingdelegator.tokenProvider.port | quote  }}
+  PF_DELEGATOR_CLIENTID: {{ .Values.pingdelegator.tokenProvider.clientId | quote  }}
+  PD_ENGINE_PRIVATE_HOSTNAME: {{ .Values.pingdelegator.pingDirectoryServer.hostname | quote  }}
+  PD_ENGINE_PRIVATE_PORT: {{ .Values.pingdelegator.pingDirectoryServer.port | quote  }}
+{{ toYaml .Values.pingdelegator.envs | indent 2 }}
