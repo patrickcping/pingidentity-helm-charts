@@ -1,5 +1,10 @@
 # PingAccess
 
+Remember to add the repo before installing the chart
+```shell
+helm repo add pingidentity-pc https://patrickcping.github.io/ping-identity-helm-charts-repo/
+```
+
 ## Use Devops Key
 In a development or sandbox environment, the helm chart can be run with a valid registered devops license key (https://pingidentity-devops.gitbook.io/devops/getstarted/devopsregistration).  Make sure the `PING_IDENTITY_DEVOPS_USER` and `PING_IDENTITY_DEVOPS_KEY` environment variables are set
 
@@ -10,7 +15,7 @@ pingaccess --debug \
 --set license.devOpsKey.user=${PING_IDENTITY_DEVOPS_USER} \
 --set license.devOpsKey.key=${PING_IDENTITY_DEVOPS_KEY} \
 --set license.acceptEULA=yes \
- ./
+pingidentity-pc/pingaccess
 ```
 
 ## Use provided License file
@@ -23,7 +28,7 @@ helm install \
 pingaccess --debug \
 --set license.licenseSecretName=pingaccess-license
 --set license.acceptEULA=yes \
- ./
+pingidentity-pc/pingaccess
 ```
 
 ## Chart Configuration

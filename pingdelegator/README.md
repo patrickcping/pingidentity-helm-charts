@@ -1,9 +1,14 @@
 # PingDelegator
 
+Remember to add the repo before installing the chart
+```shell
+helm repo add pingidentity-pc https://patrickcping.github.io/ping-identity-helm-charts-repo/
+```
+
 ## Running
 In a development or sandbox environment, the helm chart can be run with a valid registered devops license key (https://pingidentity-devops.gitbook.io/devops/getstarted/devopsregistration).  Make sure the `PING_IDENTITY_DEVOPS_USER` and `PING_IDENTITY_DEVOPS_KEY` environment variables are set
 
-Requires [PingDirectory](../pingdirectory) and a token provider ([PingFederate]](../pingfederate)) to use.  Example commands for all components:
+Requires [PingDirectory](../pingdirectory) and a token provider such as [PingFederate]](../pingfederate) to use.  Example commands for all components:
 
 ### PingDirectory
 ```shell
@@ -15,7 +20,7 @@ pingdelegator-pingdirectory --debug \
 --set license.acceptEULA=yes \
 --set pingdirectory.envs.SERVER_PROFILE_PATH=baseline/pingdirectory \
 --set persistentvolume.enabled=false \
- ./../pingdirectory
+pingidentity-pc/pingdirectory
 ```
 
 ### PingFederate
@@ -27,7 +32,7 @@ pingdelegator-pingfederate --debug \
 --set license.devOpsKey.key=${PING_IDENTITY_DEVOPS_KEY} \
 --set license.acceptEULA=yes \
 --set pingfederate.envs.SERVER_PROFILE_PATH=baseline/pingfederate \
- ./../pingfederate
+pingidentity-pc/pingfederate
 ```
 
 ### PingDelegator
@@ -37,7 +42,7 @@ pingdelegator --debug \
 --set pingdelegator.publicHostname=localhost \
 --set pingdelegator.tokenProvider.hostname=localhost \
 --set pingdelegator.tokenProvider.port=9031 \
- ./
+pingidentity-pc/pingdelegator
 ```
 
 ## Chart Configuration

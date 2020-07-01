@@ -20,3 +20,16 @@ Note: These charts are development / POC quality and originally put together as 
 | PingDataGovernance PAP | Product | Fine-grain Authz PAP | Not available | N/a |
 | PingDataSync | Product | Data Synchronisation Engine | Not available | N/a |
 | PingDirectoryProxy | Product | Directory Proxy | Not available | N/a |
+
+## Add the Repository
+
+```shell
+helm repo add pingidentity-pc https://patrickcping.github.io/ping-identity-helm-charts-repo/
+helm repo update
+helm repo list
+```
+
+Search for a Ping chart
+```shell
+helm search repo ping
+```
