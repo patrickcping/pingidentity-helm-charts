@@ -22,8 +22,8 @@
 
 {{- else if contains "ClusterIP" .Values.service.type }}
 
-  echo "LDAP services will be available at ldaps://localhost:{{ .Values.service.ldaps.port }} or ldap://localhost:{{ .Values.service.ldap.port }}"
-  echo "The directory API services are available at https://localhost:{{ .Values.service.https.port }}"
+  echo "LDAP services will be available at ldaps://localhost:1{{ .Values.service.ldaps.port }} or ldap://localhost:1{{ .Values.service.ldap.port }}"
+  echo "The directory API services are available at https://localhost:1{{ .Values.service.https.port }}"
 
   kubectl port-forward svc/$(kubectl get svc --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "pingdirectory.name" . }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}") \
    1{{ .Values.service.ldaps.port }}:{{ .Values.service.ldaps.port }} \

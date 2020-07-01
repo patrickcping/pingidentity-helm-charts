@@ -20,7 +20,6 @@
 
 {{- else if contains "ClusterIP" .Values.service.type }}
 
-  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "pingdataconsole.name" . }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
   echo "Visit https://localhost:{{ .Values.service.http.port }}/ for the administration console"
   
   kubectl port-forward svc/$(kubectl get svc --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "pingdataconsole.name" . }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}") \
