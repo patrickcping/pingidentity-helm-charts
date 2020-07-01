@@ -7,8 +7,8 @@ replicaCount: 1
 image:
   repository: pingidentity
   name: pingaccess
-  tag: edge # https://hub.docker.com/r/pingidentity/pingaccess/tags
-  pullPolicy: Always
+  tag: 2006-6.1.0
+  pullPolicy: IfNotPresent
   readinessCommand: /opt/liveness.sh
   livenessCommand: /opt/liveness.sh
 

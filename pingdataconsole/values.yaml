@@ -10,8 +10,8 @@ replicaCount: 1
 image:
   repository: pingidentity
   name: pingdataconsole
-  tag: edge
-  pullPolicy: Always
+  tag: 2006-8.1.0.0
+  pullPolicy: IfNotPresent
   readinessCommand: /opt/liveness.sh
   livenessCommand: /opt/liveness.sh
   

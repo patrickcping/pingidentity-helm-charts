@@ -6,22 +6,34 @@
   {{- end }}
 {{- end }}
 {{- else if contains "NodePort" .Values.service.type }}
+
   export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "pingdirectory.fullname" . }})
   export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
   echo http://$NODE_IP:$NODE_PORT
+
 {{- else if contains "LoadBalancer" .Values.service.type }}
+
      NOTE: It may take a few minutes for the LoadBalancer IP to be available.
            You can watch the status of by running 'kubectl get --namespace {{ .Release.Namespace }} svc -w {{ include "pingdirectory.fullname" . }}'
   export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ include "pingdirectory.fullname" . }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-  echo http://$SERVICE_IP:{{ .Values.service.port }}
+  echo https://$SERVICE_IP:{{ .Values.service.https.port }}
+  echo ldaps://$SERVICE_IP:{{ .Values.service.ldaps.port }}
+  echo ldap://$SERVICE_IP:{{ .Values.service.ldap.port }}
+
 {{- else if contains "ClusterIP" .Values.service.type }}
-  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "pingdirectory.name" . }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
-  echo "Visit https://localhost:{{ .Values.service.admin.port }}/pingdirectory for the administration console"
-  echo "The runtime will be available at https://localhost:{{ .Values.service.runtime.port }}"
-  kubectl port-forward $POD_NAME {{ .Values.service.admin.port }}:{{ .Values.service.admin.port }} {{ .Values.service.runtime.port }}:{{ .Values.service.runtime.port }} -n default
-{{- end }}
+
+  echo "LDAP services will be available at ldaps://localhost:{{ .Values.service.ldaps.port }} or ldap://localhost:{{ .Values.service.ldap.port }}"
+  echo "The directory API services are available at https://localhost:{{ .Values.service.https.port }}"
+
+  kubectl port-forward svc/$(kubectl get svc --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "pingdirectory.name" . }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}") \
+   1{{ .Values.service.ldaps.port }}:{{ .Values.service.ldaps.port }} \
+   1{{ .Values.service.ldap.port }}:{{ .Values.service.ldap.port }} \
+   1{{ .Values.service.https.port }}:{{ .Values.service.https.port }} \
+   -n {{ .Release.Namespace }}
+  {{- end }}
 
 {{- if .Values.persistentvolume.enabled }}
+
 2. This chart deploys a PVC.  When managing deletion through helm (helm delete) you may want to delete the PV/PVC data.  Get the PVC name by running this command:
   kubectl get pvc --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "pingdirectory.name" . }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}"
 

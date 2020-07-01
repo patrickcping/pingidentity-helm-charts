@@ -5,7 +5,7 @@ In a development or sandbox environment, the helm chart can be run with a valid 
 
 ```shell
 helm install \
---generate-name --debug \
+pingfederate --debug \
 --set license.useDevOpsKey=true \
 --set license.devOpsKey.user=${PING_IDENTITY_DEVOPS_USER} \
 --set license.devOpsKey.key=${PING_IDENTITY_DEVOPS_KEY} \
@@ -20,7 +20,7 @@ In a controlled environment, the helm chart can be run with a valid license file
 kubectl create secret generic pingfederate-license --from-file ./pingfederate.lic
 
 helm install \
---generate-name --debug \
+pingfederate --debug \
 --set license.licenseSecretName=pingfederate-license
 --set license.acceptEULA=yes \
  ./
@@ -39,8 +39,8 @@ By default this chart loads sample PingFederate configuration on startup.  These
 
 | Configuration Layer | Server Profile |
 |--|--|
-| 1 | https://github.com/pingidentity/pingidentity-server-profiles/tree/master/pf-dns-ping-clustering |
-| 2 | https://github.com/pingidentity/pingidentity-server-profiles/tree/master/getting-started/pingfederate |
+| 1 | https://github.com/pingidentity/pingidentity-server-profiles/tree/master/getting-started/pingfederate |
+| 2 | https://github.com/pingidentity/pingidentity-server-profiles/tree/master/pf-dns-ping-clustering |
 
 You can add additional layers or change to your own configuration repository by modifying the `SERVER_PROFILE_*` environment variables in `pingfederate.envs` of the chart configuration
 

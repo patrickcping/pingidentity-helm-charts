@@ -5,7 +5,7 @@ In a development or sandbox environment, the helm chart can be run with a valid 
 
 ```shell
 helm install \
---generate-name --debug \
+pingaccess --debug \
 --set license.useDevOpsKey=true \
 --set license.devOpsKey.user=${PING_IDENTITY_DEVOPS_USER} \
 --set license.devOpsKey.key=${PING_IDENTITY_DEVOPS_KEY} \
@@ -20,7 +20,7 @@ In a controlled environment, the helm chart can be run with a valid license file
 kubectl create secret generic pingaccess-license --from-file ./pingaccess.lic
 
 helm install \
---generate-name --debug \
+pingaccess --debug \
 --set license.licenseSecretName=pingaccess-license
 --set license.acceptEULA=yes \
  ./

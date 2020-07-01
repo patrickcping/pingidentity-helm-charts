@@ -5,11 +5,12 @@ In a development or sandbox environment, the helm chart can be run with a valid 
 
 ```shell
 helm install \
---generate-name --debug \
+pingdirectory --debug \
 --set license.useDevOpsKey=true \
 --set license.devOpsKey.user=${PING_IDENTITY_DEVOPS_USER} \
 --set license.devOpsKey.key=${PING_IDENTITY_DEVOPS_KEY} \
 --set license.acceptEULA=yes \
+--set persistentvolume.enabled=false \
  ./
 ```
 
@@ -20,7 +21,7 @@ In a controlled environment, the helm chart can be run with a valid license file
 kubectl create secret generic pingdirectory-license --from-file ./pingdirectory.lic
 
 helm install \
---generate-name --debug \
+pingdirectory --debug \
 --set license.licenseSecretName=pingdirectory-license
 --set license.acceptEULA=yes \
  ./

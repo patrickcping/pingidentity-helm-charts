@@ -4,7 +4,7 @@
 
 ```shell
 helm install \
---generate-name --debug \
+pingdataconsole --debug \
  ./
 ```
 

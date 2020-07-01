@@ -10,12 +10,12 @@ Note: These charts are development / POC quality and originally put together as 
 
 | Chart | Capability | Status | Scalable |
 |--|--|--|--|
-| PingFederate | SSO / Authentication Authority | Available (Beta) | Yes |
-| PingAccess | Medium/Course grain Authorisation Gateway / PEP | Available (Beta) | No (TBC) |
-| PingDirectory | User/Device/Consent/Organisation Directory | Available (Beta) | Yes |
-| PingDelegator | Delegated User Management UI | In progress | N/a |
-| PingCentral | Delegated Application Management UI | In progress | N/a |
-| PingDataConsole | PingData Admin Console | Available (Beta) | Not required |
+| [PingFederate](pingfederate/) | SSO / Authentication Authority | Available (Beta) | Yes |
+| [PingAccess](pingaccess/) | Medium/Course grain Authorisation Gateway / PEP | Available (Beta) | No (TBC) |
+| [PingDirectory](pingdirectory/) | User/Device/Consent/Organisation Directory | Available (Beta) | Yes |
+| [PingDelegator](pingdelegator/) | Delegated User Management UI | Available (Beta) | Yes |
+| PingCentral | Delegated Application Management UI | In development | N/a |
+| [PingDataConsole](pingdataconsole/) | PingData Admin Console | Available (Beta) | Not required |
 | PingDataGovernance | Fine-grain Authorisation PDP | Not available | N/a |
 | PingDataGovernance PAP | Fine-grain Authz PAP | Not available | N/a |
 | PingDataSync | Data Synchronisation Engine | Not available | N/a |
