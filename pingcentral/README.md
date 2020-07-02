@@ -47,3 +47,7 @@ By default this chart loads sample PingCentral configuration on startup.  These 
 | 2 | https://github.com/pingidentity/pingidentity-server-profiles/tree/master/baseline/pingcentral/logging |
 
 You can add additional layers or change to your own configuration repository by modifying the `SERVER_PROFILE_*` environment variables in `pingcentral.envs` of the chart configuration
+
+## Chart Dependencies
+
+This chart uses the [Bitnami MySQL](https://hub.helm.sh/charts/bitnami/mysql) chart to store application data
