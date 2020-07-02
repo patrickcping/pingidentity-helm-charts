@@ -26,7 +26,7 @@ kubectl create secret generic pingaccess-license --from-file ./pingaccess.lic
 
 helm install \
 pingaccess --debug \
---set license.licenseSecretName=pingaccess-license
+--set license.licenseSecretName=pingaccess-license \
 --set license.acceptEULA=yes \
 pingidentity-pc/pingaccess
 ```

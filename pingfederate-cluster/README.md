@@ -31,9 +31,9 @@ kubectl create secret generic pingfederate-license-engine --from-file ./pingfede
 
 helm install \
 pingfederate-cluster --debug \
---set admin.license.licenseSecretName=pingfederate-license-admin
+--set admin.license.licenseSecretName=pingfederate-license-admin \
 --set admin.license.acceptEULA=yes \
---set engine.license.licenseSecretName=pingfederate-license-engine
+--set engine.license.licenseSecretName=pingfederate-license-engine \
 --set engine.license.acceptEULA=yes \
 pingidentity-pc/pingfederate-cluster
 ```

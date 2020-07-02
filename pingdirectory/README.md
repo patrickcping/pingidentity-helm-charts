@@ -27,7 +27,7 @@ kubectl create secret generic pingdirectory-license --from-file ./pingdirectory.
 
 helm install \
 pingdirectory --debug \
---set license.licenseSecretName=pingdirectory-license
+--set license.licenseSecretName=pingdirectory-license \
 --set license.acceptEULA=yes \
 pingidentity-pc/pingdirectory
 ```

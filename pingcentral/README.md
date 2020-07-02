@@ -26,7 +26,7 @@ kubectl create secret generic pingcentral-license --from-file ./pingcentral.lic
 
 helm install \
 pingcentral --debug \
---set license.licenseSecretName=pingcentral-license
+--set license.licenseSecretName=pingcentral-license \
 --set license.acceptEULA=yes \
 pingidentity-pc/pingcentral
 ```

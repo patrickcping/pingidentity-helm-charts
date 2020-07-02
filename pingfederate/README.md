@@ -26,7 +26,7 @@ kubectl create secret generic pingfederate-license --from-file ./pingfederate.li
 
 helm install \
 pingfederate --debug \
---set license.licenseSecretName=pingfederate-license
+--set license.licenseSecretName=pingfederate-license \
 --set license.acceptEULA=yes \
 pingidentity-pc/pingfederate
 ```
