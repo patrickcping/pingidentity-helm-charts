@@ -43,7 +43,7 @@ By default this chart loads sample PingAccess configuration on startup.  These a
 
 | Configuration Layer | Server Profile |
 |--|--|
-| 1 | https://github.com/pingidentity/pingidentity-server-profiles/tree/master/getting-started/pingaccess |
+| 1 | https://github.com/pingidentity/pingidentity-server-profiles/tree/master/pa-clustering/pingaccess |
 
 You can add additional layers or change to your own configuration repository by modifying the `SERVER_PROFILE_*` environment variables in `pingaccess.envs` of the chart configuration
 
@@ -51,10 +51,29 @@ You can add additional layers or change to your own configuration repository by 
 
 ### Admin Console
 ```shell
-TBC
+helm install \
+pingaccess-admin --debug \
+--set pingaccess.logging=DEBUG \
+--set pingaccess.clustering.enabled=true \
+--set pingaccess.clustering.adminConsoleRole=true \
+--set license.useDevOpsKey=true \
+--set license.devOpsKey.user=${PING_IDENTITY_DEVOPS_USER} \
+--set license.devOpsKey.key=${PING_IDENTITY_DEVOPS_KEY} \
+--set license.acceptEULA=yes \
+pingidentity-pc/pingaccess
 ```
 
 ### Engines:
 ```shell
-TBC
+helm install \
+pingaccess-engine --debug \
+--set pingaccess.logging=DEBUG \
+--set pingaccess.clustering.enabled=true \
+--set pingaccess.clustering.adminConsoleRole=false \
+--set replicaCount=3 \
+--set license.useDevOpsKey=true \
+--set license.devOpsKey.user=${PING_IDENTITY_DEVOPS_USER} \
+--set license.devOpsKey.key=${PING_IDENTITY_DEVOPS_KEY} \
+--set license.acceptEULA=yes \
+pingidentity-pc/pingaccess
 ```

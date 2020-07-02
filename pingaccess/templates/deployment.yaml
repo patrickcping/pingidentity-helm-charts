@@ -31,10 +31,18 @@ spec:
           subPath: pingaccess.lic
         {{ end -}}
         ports:
+        {{- if or (and (.Values.pingaccess.clustering.enabled) (.Values.pingaccess.clustering.adminConsoleRole)) (not .Values.pingaccess.clustering.enabled) }}
         - containerPort: {{ .Values.service.admin.port }}
           name: {{ .Values.service.admin.name }}
-        - containerPort: {{ .Values.service.runtime.port }}
-          name: {{ .Values.service.runtime.name }}
+        {{ end -}}
+        {{- if or (and (.Values.pingaccess.clustering.enabled) (not .Values.pingaccess.clustering.adminConsoleRole)) (not .Values.pingaccess.clustering.enabled) }}
+        - containerPort: {{ .Values.service.engine.port }}
+          name: {{ .Values.service.engine.name }}
+        {{ end -}}
+        {{- if and (.Values.pingaccess.clustering.enabled) (.Values.pingaccess.clustering.adminConsoleRole) }}
+        - containerPort: {{ .Values.pingaccess.clustering.service.cluster.port }}
+          name: {{ .Values.pingaccess.clustering.service.cluster.name }}
+        {{ end -}}
         envFrom:
         - configMapRef:
             name: {{ include "pingaccess.fullname" . }}-env-vars

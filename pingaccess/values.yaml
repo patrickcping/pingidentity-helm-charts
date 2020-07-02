@@ -17,8 +17,17 @@ pingaccess:
 
   envs:
     SERVER_PROFILE_URL: https://github.com/pingidentity/pingidentity-server-profiles.git 
-    SERVER_PROFILE_PATH: getting-started/pingaccess
+    SERVER_PROFILE_PATH: pa-clustering/pingaccess
     SERVER_PROFILE_BRANCH: master
+
+  clustering:
+    enabled: false # If set to false, server will start in STANDALONE
+    adminConsoleRole: true # If true, server will start in CLUSTERED_CONSOLE mode.  If false, server will start in CLUSTERED_ENGINE mode.  If CLUSTERED_CONSOLE, replicaCount will be overridden to 1
+    adminHostService: pingaccess-admin # This is used as a k8s selector to allow nodes from different deployments to discover each other
+    service:
+      cluster:
+        port: 9090
+        name: cluster
 
 license:
   acceptEULA: false
@@ -37,9 +46,9 @@ service:
   admin:
     port: 9000
     name: pa-admin
-  runtime:
+  engine:
     port: 3000
-    name: pa-runtime
+    name: pa-engine
 
 ingress:
   enabled: false

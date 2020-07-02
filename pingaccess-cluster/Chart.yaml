@@ -1,0 +1,19 @@
+apiVersion: v2
+appVersion: "10.1.0"
+description: A Sample PingAccess cluster Helm chart
+name: pingaccess-cluster
+version: 0.1.0
+home: https://www.pingidentity.com/
+sources:
+- https://github.com/patrickcping/pingidentity-helm-charts
+- https://github.com/pingidentity/pingidentity-docker-builds
+- https://github.com/pingidentity/pingidentity-server-profiles
+dependencies:
+- name: pingaccess
+  version: 0.2.0
+  repository: "https://patrickcping.github.io/ping-identity-helm-charts-repo"
+  alias: admin
+- name: pingaccess
+  version: 0.2.0
+  repository: "https://patrickcping.github.io/ping-identity-helm-charts-repo"
+  alias: engine

@@ -10,14 +10,24 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
+    {{- if or (and (.Values.pingaccess.clustering.enabled) (.Values.pingaccess.clustering.adminConsoleRole)) (not .Values.pingaccess.clustering.enabled) }}
     - port: {{ .Values.service.admin.port }}
       targetPort: {{ .Values.service.admin.port }}
       protocol: TCP
       name: {{ .Values.service.admin.name }}
-    - port: {{ .Values.service.runtime.port }}
-      targetPort: {{ .Values.service.runtime.port }}
+    {{ end }}
+    {{- if or (and (.Values.pingaccess.clustering.enabled) (not .Values.pingaccess.clustering.adminConsoleRole)) (not .Values.pingaccess.clustering.enabled) }}
+    - port: {{ .Values.service.engine.port }}
+      targetPort: {{ .Values.service.engine.port }}
       protocol: TCP
-      name: {{ .Values.service.runtime.name }}
+      name: {{ .Values.service.engine.name }}
+    {{ end }}
+    {{- if and (.Values.pingaccess.clustering.enabled) (.Values.pingaccess.clustering.adminConsoleRole) }}
+    - port: {{ .Values.pingaccess.clustering.service.cluster.port }}
+      targetPort: {{ .Values.pingaccess.clustering.service.cluster.port }}
+      protocol: TCP
+      name: {{ .Values.pingaccess.clustering.service.cluster.name }}
+    {{ end }}
   selector:
     app.kubernetes.io/name: {{ include "pingaccess.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}

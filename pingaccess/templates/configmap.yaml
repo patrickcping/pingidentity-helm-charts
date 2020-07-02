@@ -11,3 +11,13 @@ data:
   PING_IDENTITY_ACCEPT_EULA: {{ .Values.license.acceptEULA | quote  }}
   PA_LOG_LEVEL: {{ .Values.pingaccess.logging | quote }}
 {{ toYaml .Values.pingaccess.envs | indent 2 }}
+  {{- if .Values.pingaccess.clustering.enabled }}
+  {{- if .Values.pingaccess.clustering.adminConsoleRole }}
+  OPERATIONAL_MODE: "CLUSTERED_CONSOLE"
+  {{- else }}
+  OPERATIONAL_MODE: "CLUSTERED_ENGINE"
+  {{- end }}
+  PA_CONSOLE_HOST: "{{ .Values.pingaccess.clustering.adminHostService }}"
+  {{- else }}
+  OPERATIONAL_MODE: "STANDALONE"
+  {{ end -}}
