@@ -11,6 +11,7 @@ Note: These charts are development / POC quality and originally put together as 
 | Chart | Type | Capability | Status | Scalable |
 |--|--|--|--|--|
 | [PingFederate](pingfederate/) | Product | SSO / Authentication Authority | Available (Beta) | Yes |
+| [PingFederate Cluster](pingfederate-cluster/) | Product | SSO / Authentication Authority | Available (Beta) | Yes |
 | [PingAccess](pingaccess/) | Product | Medium/Course grain Authorisation Gateway / PEP | Available (Beta) | No (TBC) |
 | [PingDirectory](pingdirectory/) | Product | User/Device/Consent/Organisation Directory | Available (Beta) | Yes |
 | [PingDelegator](pingdelegator/) | Product | Delegated User Management UI | Available (Beta) | Yes |

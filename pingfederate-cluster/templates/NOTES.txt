@@ -1,0 +1,81 @@
+PingFederate Administration:
+
+1. Get the application URL by running these commands:
+{{- if or .Values.admin.ingress.enabled }}
+{{- range $host := .Values.admin.ingress.hosts }}
+  {{- range $path := .paths }}
+  http{{ if $.Values.admin.ingress.tls }}s{{ end }}://{{ $host.host }}{{ $path.path }}
+  {{- end }}
+{{- end }}
+{{- else if contains "NodePort" .Values.admin.service.type }}
+
+  export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "pingfederate.fullname" . }})
+  export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
+  echo http://$NODE_IP:$NODE_PORT
+
+{{- else if contains "LoadBalancer" .Values.admin.service.type }}
+
+     NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+           You can watch the status of by running 'kubectl get --namespace {{ .Release.Namespace }} svc -w {{ include "pingfederate.fullname" . }}'
+  export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ include "pingfederate.fullname" . }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+  echo http://$SERVICE_IP:{{ .Values.admin.service.port }}
+
+{{- else if contains "ClusterIP" .Values.admin.service.type }}
+
+  {{- if or (and (.Values.admin.pingfederate.clustering.enabled) (.Values.admin.pingfederate.clustering.adminConsoleRole)) (not .Values.admin.pingfederate.clustering.enabled) }}
+  echo "Visit https://localhost:{{ .Values.admin.service.admin.port }}/pingfederate for the administration console"
+  {{- end }}
+  {{- if or (and (.Values.admin.pingfederate.clustering.enabled) (not .Values.admin.pingfederate.clustering.adminConsoleRole)) (not .Values.admin.pingfederate.clustering.enabled) }}
+  echo "The runtime will be available at https://localhost:{{ .Values.admin.service.runtime.port }}"
+  {{- end }}
+
+  kubectl port-forward svc/$(kubectl get svc --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name=admin,app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}") \
+  {{- if or (and (.Values.admin.pingfederate.clustering.enabled) (.Values.admin.pingfederate.clustering.adminConsoleRole)) (not .Values.admin.pingfederate.clustering.enabled) }}
+   {{ .Values.admin.service.admin.port }}:{{ .Values.admin.service.admin.port }} \
+  {{- end }}
+  {{- if or (and (.Values.admin.pingfederate.clustering.enabled) (not .Values.admin.pingfederate.clustering.adminConsoleRole)) (not .Values.admin.pingfederate.clustering.enabled) }}
+   {{ .Values.admin.service.runtime.port }}:{{ .Values.admin.service.runtime.port }} \
+  {{- end }}
+   -n {{ .Release.Namespace }}
+{{- end }}
+
+PingFederate Engine:
+
+1. Get the application URL by running these commands:
+{{- if or .Values.engine.ingress.enabled }}
+{{- range $host := .Values.engine.ingress.hosts }}
+  {{- range $path := .paths }}
+  http{{ if $.Values.engine.ingress.tls }}s{{ end }}://{{ $host.host }}{{ $path.path }}
+  {{- end }}
+{{- end }}
+{{- else if contains "NodePort" .Values.engine.service.type }}
+
+  export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "pingfederate.fullname" . }})
+  export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
+  echo http://$NODE_IP:$NODE_PORT
+
+{{- else if contains "LoadBalancer" .Values.engine.service.type }}
+
+     NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+           You can watch the status of by running 'kubectl get --namespace {{ .Release.Namespace }} svc -w {{ include "pingfederate.fullname" . }}'
+  export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ include "pingfederate.fullname" . }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+  echo http://$SERVICE_IP:{{ .Values.engine.service.port }}
+
+{{- else if contains "ClusterIP" .Values.engine.service.type }}
+
+  {{- if or (and (.Values.engine.pingfederate.clustering.enabled) (.Values.engine.pingfederate.clustering.adminConsoleRole)) (not .Values.engine.pingfederate.clustering.enabled) }}
+  echo "Visit https://localhost:{{ .Values.engine.service.admin.port }}/pingfederate for the administration console"
+  {{- end }}
+  {{- if or (and (.Values.engine.pingfederate.clustering.enabled) (not .Values.engine.pingfederate.clustering.adminConsoleRole)) (not .Values.engine.pingfederate.clustering.enabled) }}
+  echo "The runtime will be available at https://localhost:{{ .Values.engine.service.runtime.port }}"
+  {{- end }}
+
+  kubectl port-forward svc/$(kubectl get svc --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name=engine,app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}") \
+  {{- if or (and (.Values.engine.pingfederate.clustering.enabled) (.Values.engine.pingfederate.clustering.adminConsoleRole)) (not .Values.engine.pingfederate.clustering.enabled) }}
+   {{ .Values.engine.service.admin.port }}:{{ .Values.engine.service.admin.port }} \
+  {{- end }}
+  {{- if or (and (.Values.engine.pingfederate.clustering.enabled) (not .Values.engine.pingfederate.clustering.adminConsoleRole)) (not .Values.engine.pingfederate.clustering.enabled) }}
+   {{ .Values.engine.service.runtime.port }}:{{ .Values.engine.service.runtime.port }} \
+  {{- end }}
+   -n {{ .Release.Namespace }}
+{{- end }}

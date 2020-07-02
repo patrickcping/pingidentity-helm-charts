@@ -1,0 +1,9 @@
+dependencies:
+- name: pingfederate
+  repository: https://patrickcping.github.io/ping-identity-helm-charts-repo
+  version: 0.1.1
+- name: pingfederate
+  repository: https://patrickcping.github.io/ping-identity-helm-charts-repo
+  version: 0.1.1
+digest: sha256:6a11a7c940c60e16eef44bc4d26931cd0f44a96285f3d593ed2d3d5c1e246f00
+generated: "2020-07-02T08:44:45.767889+01:00"
