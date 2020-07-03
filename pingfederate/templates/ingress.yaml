@@ -32,8 +32,16 @@ spec:
         {{- range .paths }}
           - path: {{ .path }}
             backend:
-              serviceName: {{ $fullName }}
-              servicePort: {{ .backend.servicePort }}
+              serviceName: {{ if eq .backend.service "admin" -}}
+{{ include "pingfederate.fullname" $ }}{{ if $.Values.pingfederate.clustering.enabled }}-admin{{ end }}
+{{- else if eq .backend.service "engine" -}}
+{{ include "pingfederate.fullname" $ }}{{ if $.Values.pingfederate.clustering.enabled }}-engine{{ end }}
+{{- end }}
+              servicePort: {{ if eq .backend.service "admin" -}}
+{{ $.Values.service.admin.port }}
+{{- else if eq .backend.service "engine" -}}
+{{ $.Values.service.engine.port }}
+{{- end }}
         {{- end }}
   {{- end }}
 {{- end }}

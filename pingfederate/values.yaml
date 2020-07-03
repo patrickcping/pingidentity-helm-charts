@@ -67,21 +67,21 @@ ingress:
   #     paths:
   #     - path: /pingfederate
   #       backend:
-  #         servicePort: 9999
+  #         service: admin
   #     - path: /pf-admin-api
   #       backend:
-  #           servicePort: 9999
+  #         service: admin
   #   - host: my.host.pingfederate.host.com
   #     paths:
   #     - path: /
   #       backend:
-  #         servicePort: 9031
+  #         service: engine
 
   # The following section adds TLS specific configuration for the ingress descriptor.  Example:
   # tls:
   #   - secretName: tls-secret-admin
   #     hosts:
-  #       - my.host.pingfederate.host.com
+  #       - my.host.pingfederate.admin.host.com
   #   - secretName: tls-secret
   #     hosts:
   #       - my.host.pingfederate.host.com
