@@ -1,0 +1,96 @@
+{{- if .Values.pingfederate.clustering.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "pingfederate.fullname" . }}-engine
+  labels:
+    app.kubernetes.io/name: {{ include "pingfederate.name" . }}-engine
+    helm.sh/chart: {{ include "pingfederate.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "pingfederate.name" . }}-engine
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "pingfederate.name" . }}-engine
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        {{- if .Values.pingfederate.clustering.enabled}}
+        clusterIdentifier: {{ .Release.Name }}
+        {{- end }}
+    spec:
+      terminationGracePeriodSeconds: 300
+      # this helps on the _initial_ start of the cluster to ensure engines and admins don't create cluster islands
+      initContainers:
+      - name: init
+        image: curlimages/curl:latest
+        command: ['sh', '-c', 'until curl --connect-timeout 1 --silent -k https://{{ include "pingfederate.fullname" . }}{{ if .Values.pingfederate.clustering.enabled }}-admin{{ end }}:{{ .Values.service.admin.port }}/pingfederate/app ; do echo waiting for admin ; sleep 2 ; done']
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}/{{ .Values.image.name }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        {{ if not .Values.license.useDevOpsKey }}
+        volumeMounts:
+        - name: license
+          mountPath: /opt/in/instance/server/default/conf/pingfederate.lic
+          subPath: pingfederate.lic
+        {{ end -}}
+        ports:
+        - containerPort: {{ .Values.service.engine.port }}
+          name: {{ .Values.service.engine.name }}
+        - containerPort: {{ .Values.pingfederate.clustering.service.clusterBind.port }}
+          name: {{ .Values.pingfederate.clustering.service.clusterBind.name }}
+        - containerPort: {{ .Values.pingfederate.clustering.service.clusterFailure.port }}
+          name: {{ .Values.pingfederate.clustering.service.clusterFailure.name }}
+        env:
+        - name: OPERATIONAL_MODE
+          value: CLUSTERED_ENGINE
+        envFrom:
+        - configMapRef:
+            name: {{ include "pingfederate.fullname" . }}-env-vars
+        - secretRef:
+            name: {{ include "pingfederate.fullname" . }}-devops-secret
+            optional: true
+        - secretRef:
+            name: {{ include "pingfederate.fullname" . }}-git-secret
+            optional: true
+        readinessProbe:
+          exec:
+            command: [ {{ .Values.image.readinessCommand }} ]
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        livenessProbe:
+          exec:
+            command: [ {{ .Values.image.livenessCommand }} ]
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        # the prestop 'sleep' should be slightly higher than the lifetime of an _authorization code_
+        # auth codes are not shared across the cluster unless requested, the prestop hook ensures that a 
+        # PF engine is alive and accessible only to other engines long enough to provide auth codes it owns. 
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh","-c","sleep 20"]
+    {{- if .Values.resources }}
+        resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- end }}
+    {{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+    {{- end }}
+    {{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 8 }}
+    {{- end }}
+    {{- if not .Values.license.useDevOpsKey }}
+      volumes:
+      - name: license
+        secret:
+          secretName: {{ .Values.license.licenseSecretName }}
+    {{- end }}
+{{ end }}

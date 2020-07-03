@@ -1,0 +1,21 @@
+{{- if .Values.pingfederate.clustering.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "pingfederate.fullname" . }}-engine
+  labels:
+    app.kubernetes.io/name: {{ include "pingfederate.name" . }}-engine
+    helm.sh/chart: {{ include "pingfederate.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.engine.port }}
+      targetPort: {{ .Values.service.engine.port }}
+      protocol: TCP
+      name: {{ .Values.service.engine.name }}
+  selector:
+    app.kubernetes.io/name: {{ include "pingfederate.name" . }}-engine
+    app.kubernetes.io/instance: {{ .Release.Name }}
+{{ end }}

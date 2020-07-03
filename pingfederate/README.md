@@ -51,13 +51,11 @@ You can add additional layers or change to your own configuration repository by 
 
 ## Clustering Example
 
-### Admin Console
 ```shell
 helm install \
-pingfederate-admin --debug \
+pingfederate-cluster --debug \
 --set pingfederate.logging=DEBUG \
 --set pingfederate.clustering.enabled=true \
---set pingfederate.clustering.adminConsoleRole=true \
 --set license.useDevOpsKey=true \
 --set license.devOpsKey.user=${PING_IDENTITY_DEVOPS_USER} \
 --set license.devOpsKey.key=${PING_IDENTITY_DEVOPS_KEY} \
@@ -65,17 +63,3 @@ pingfederate-admin --debug \
 pingidentity-pc/pingfederate
 ```
 
-### Engines:
-```shell
-helm install \
-pingfederate-runtime --debug \
---set pingfederate.logging=DEBUG \
---set pingfederate.clustering.enabled=true \
---set pingfederate.clustering.adminConsoleRole=false \
---set replicaCount=3 \
---set license.useDevOpsKey=true \
---set license.devOpsKey.user=${PING_IDENTITY_DEVOPS_USER} \
---set license.devOpsKey.key=${PING_IDENTITY_DEVOPS_KEY} \
---set license.acceptEULA=yes \
-pingidentity-pc/pingfederate
-```

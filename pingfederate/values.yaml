@@ -27,8 +27,6 @@ pingfederate:
 
   clustering:
     enabled: false # If set to false, server will start in STANDALONE
-    adminConsoleRole: true # If true, server will start in CLUSTERED_CONSOLE mode.  If false, server will start in CLUSTERED_ENGINE mode.  If CLUSTERED_CONSOLE, replicaCount will be overridden to 1
-    clusterIdentifier: pf-cluster # This is used as a k8s selector to allow nodes from different deployments to discover each other
     service:
       clusterBind:
         port: 7600
@@ -38,7 +36,7 @@ pingfederate:
         name: pf-clusterf
 
 license:
-  acceptEULA: false
+  acceptEULA: no
   licenseSecretName: pingfederate-license
   # Using the devops key is best suited to development or sandbox environments.  In other cases create a license secret
   useDevOpsKey: false
@@ -54,9 +52,9 @@ service:
   admin:
     port: 9999
     name: pf-admin
-  runtime:
+  engine:
     port: 9031
-    name: pf-runtime
+    name: pf-engine
 
 ingress:
   enabled: false
@@ -65,7 +63,7 @@ ingress:
   #   kubernetes.io/ingress.class: "nginx-public"
 
   # hosts:
-  #   - host: my.host.pingfederate.host.com
+  #   - host: my.host.pingfederate.admin.host.com
   #     paths:
   #     - path: /pingfederate
   #       backend:
@@ -73,12 +71,17 @@ ingress:
   #     - path: /pf-admin-api
   #       backend:
   #           servicePort: 9999
+  #   - host: my.host.pingfederate.host.com
+  #     paths:
   #     - path: /
   #       backend:
   #         servicePort: 9031
 
   # The following section adds TLS specific configuration for the ingress descriptor.  Example:
   # tls:
+  #   - secretName: tls-secret-admin
+  #     hosts:
+  #       - my.host.pingfederate.host.com
   #   - secretName: tls-secret
   #     hosts:
   #       - my.host.pingfederate.host.com

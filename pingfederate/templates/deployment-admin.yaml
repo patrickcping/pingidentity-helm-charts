@@ -1,29 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "pingfederate.fullname" . }}
+  name: {{ include "pingfederate.fullname" . }}{{ if .Values.pingfederate.clustering.enabled }}-admin{{ end }}
   labels:
-    app.kubernetes.io/name: {{ include "pingfederate.name" . }}
+    app.kubernetes.io/name: {{ include "pingfederate.name" . }}{{ if .Values.pingfederate.clustering.enabled }}-admin{{ end }}
     helm.sh/chart: {{ include "pingfederate.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  {{- if and (.Values.pingfederate.clustering.enabled) (.Values.pingfederate.clustering.adminConsoleRole) }}
   replicas: 1
-  {{ else }}
-  replicas: {{ .Values.replicaCount }}
-  {{ end }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "pingfederate.name" . }}
+      app.kubernetes.io/name: {{ include "pingfederate.name" . }}{{ if .Values.pingfederate.clustering.enabled }}-admin{{ end }}
       app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ include "pingfederate.name" . }}
+        app.kubernetes.io/name: {{ include "pingfederate.name" . }}{{ if .Values.pingfederate.clustering.enabled }}-admin{{ end }}
         app.kubernetes.io/instance: {{ .Release.Name }}
         {{- if .Values.pingfederate.clustering.enabled}}
-        clusterIdentifier: {{ .Values.pingfederate.clustering.clusterIdentifier }}
+        clusterIdentifier: {{ .Release.Name }}
         {{- end }}
     spec:
       terminationGracePeriodSeconds: 300
@@ -38,28 +34,26 @@ spec:
           subPath: pingfederate.lic
         {{ end -}}
         ports:
-        {{- if or (and (.Values.pingfederate.clustering.enabled) (.Values.pingfederate.clustering.adminConsoleRole)) (not .Values.pingfederate.clustering.enabled) }}
         - containerPort: {{ .Values.service.admin.port }}
           name: {{ .Values.service.admin.name }}
+        {{- if not .Values.pingfederate.clustering.enabled }}
+        - containerPort: {{ .Values.service.engine.port }}
+          name: {{ .Values.service.engine.name }}
         {{- end -}}
-        {{- if or (and (.Values.pingfederate.clustering.enabled) (not .Values.pingfederate.clustering.adminConsoleRole)) (not .Values.pingfederate.clustering.enabled) }}
-        - containerPort: {{ .Values.service.runtime.port }}
-          name: {{ .Values.service.runtime.name }}
-        {{- end -}}
-        {{- if .Values.pingfederate.clustering.enabled}}
+        {{- if .Values.pingfederate.clustering.enabled }}
         - containerPort: {{ .Values.pingfederate.clustering.service.clusterBind.port }}
           name: {{ .Values.pingfederate.clustering.service.clusterBind.name }}
         - containerPort: {{ .Values.pingfederate.clustering.service.clusterFailure.port }}
           name: {{ .Values.pingfederate.clustering.service.clusterFailure.name }}
         {{ end -}}
-        {{ if and (.Values.pingfederate.clustering.enabled) (.Values.pingfederate.clustering.adminConsoleRole) }}
-        #env:
-        #- name: OPERATIONAL_MODE
-        #  value: CLUSTERED_CONSOLE
-        {{ else if and (.Values.pingfederate.clustering.enabled) (not .Values.pingfederate.clustering.adminConsoleRole) }}
-        #env:
-        #- name: OPERATIONAL_MODE
-        #  value: CLUSTERED_ENGINE
+        {{ if .Values.pingfederate.clustering.enabled }}
+        env:
+        - name: OPERATIONAL_MODE
+          value: CLUSTERED_CONSOLE
+        {{ else }}
+        env:
+        - name: OPERATIONAL_MODE
+          value: STANDALONE
         {{ end }}
         envFrom:
         - configMapRef:

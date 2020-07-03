@@ -1,4 +1,4 @@
-{{- if and (.Values.pingfederate.clustering.enabled) (not .Values.pingfederate.clustering.adminConsoleRole) }}
+{{- if .Values.pingfederate.clustering.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -19,5 +19,5 @@ spec:
       protocol: TCP
       targetPort: {{ .Values.pingfederate.clustering.service.clusterBind.port }}
   selector:
-     clusterIdentifier: {{ .Values.pingfederate.clustering.clusterIdentifier }}
+     clusterIdentifier: {{ .Release.Name }}
 {{- end }}

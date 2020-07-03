@@ -16,23 +16,24 @@
      NOTE: It may take a few minutes for the LoadBalancer IP to be available.
            You can watch the status of by running 'kubectl get --namespace {{ .Release.Namespace }} svc -w {{ include "pingfederate.fullname" . }}'
   export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ include "pingfederate.fullname" . }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-  echo http://$SERVICE_IP:{{ .Values.service.port }}
+  echo http://$SERVICE_IP:{{ .Values.service.admin.port }}
+  echo http://$SERVICE_IP:{{ .Values.service.engine.port }}
 
 {{- else if contains "ClusterIP" .Values.service.type }}
 
-  {{- if or (and (.Values.pingfederate.clustering.enabled) (.Values.pingfederate.clustering.adminConsoleRole)) (not .Values.pingfederate.clustering.enabled) }}
   echo "Visit https://localhost:{{ .Values.service.admin.port }}/pingfederate for the administration console"
-  {{- end }}
-  {{- if or (and (.Values.pingfederate.clustering.enabled) (not .Values.pingfederate.clustering.adminConsoleRole)) (not .Values.pingfederate.clustering.enabled) }}
-  echo "The runtime will be available at https://localhost:{{ .Values.service.runtime.port }}"
-  {{- end }}
-
-  kubectl port-forward svc/$(kubectl get svc --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "pingfederate.name" . }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}") \
-  {{- if or (and (.Values.pingfederate.clustering.enabled) (.Values.pingfederate.clustering.adminConsoleRole)) (not .Values.pingfederate.clustering.enabled) }}
+  echo "The engines will be available at https://localhost:{{ .Values.service.engine.port }}"
+  
+  kubectl port-forward svc/$(kubectl get svc --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "pingfederate.name" . }}{{ if .Values.pingfederate.clustering.enabled }}-admin{{ end }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}") \
    {{ .Values.service.admin.port }}:{{ .Values.service.admin.port }} \
-  {{- end }}
-  {{- if or (and (.Values.pingfederate.clustering.enabled) (not .Values.pingfederate.clustering.adminConsoleRole)) (not .Values.pingfederate.clustering.enabled) }}
-   {{ .Values.service.runtime.port }}:{{ .Values.service.runtime.port }} \
-  {{- end }}
+   {{- if not .Values.pingfederate.clustering.enabled }}
+   {{ .Values.service.engine.port }}:{{ .Values.service.engine.port }} \
+   {{- end }}
    -n {{ .Release.Namespace }}
+
+{{ if .Values.pingfederate.clustering.enabled }}
+  kubectl port-forward svc/$(kubectl get svc --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "pingfederate.name" . }}-engine,app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}") \
+   {{ .Values.service.engine.port }}:{{ .Values.service.engine.port }} \
+   -n {{ .Release.Namespace }}
+{{ end }}
 {{- end }}
