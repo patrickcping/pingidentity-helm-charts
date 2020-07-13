@@ -25,7 +25,7 @@ pingcentral:
     SERVER_PROFILE_BRANCH: master
     SERVER_PROFILE_PARENT: DATA
 
-    SERVER_PROFILE_DATA_URL: https://github.com/patrickcping/pingidentity-server-profiles.git
+    SERVER_PROFILE_DATA_URL: https://github.com/pingidentity/pingidentity-server-profiles.git
     SERVER_PROFILE_DATA_PATH: baseline/pingcentral/external-mysql-db
     SERVER_PROFILE_DATA_BRANCH: master
 

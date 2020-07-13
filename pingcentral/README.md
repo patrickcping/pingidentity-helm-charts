@@ -43,7 +43,7 @@ By default this chart loads sample PingCentral configuration on startup.  These 
 
 | Configuration Layer | Server Profile |
 |--|--|
-| 1 | https://github.com/patrickcping/pingidentity-server-profiles/tree/master/baseline/pingcentral/external-mysql-db |
+| 1 | https://github.com/pingidentity/pingidentity-server-profiles/tree/master/baseline/pingcentral/external-mysql-db |
 | 2 | https://github.com/pingidentity/pingidentity-server-profiles/tree/master/baseline/pingcentral/logging |
 
 You can add additional layers or change to your own configuration repository by modifying the `SERVER_PROFILE_*` environment variables in `pingcentral.envs` of the chart configuration
