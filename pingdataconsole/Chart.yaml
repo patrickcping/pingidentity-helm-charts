@@ -2,7 +2,7 @@ apiVersion: v1
 appVersion: "8.1.0"
 description: A Sample PingDataConsole Helm chart
 name: pingdataconsole
-version: 0.1.1
+version: 0.1.2
 home: https://www.pingidentity.com/
 sources:
 - https://github.com/patrickcping/pingidentity-helm-charts

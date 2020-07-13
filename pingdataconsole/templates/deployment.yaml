@@ -26,6 +26,12 @@ spec:
         ports:
         - containerPort: {{ .Values.service.http.port }}
           name: {{ .Values.service.http.name }}
+        envFrom:
+        - configMapRef:
+            name: {{ include "pingdataconsole.fullname" . }}-env-vars
+        - secretRef:
+            name: {{ include "pingdataconsole.fullname" . }}-git-secret
+            optional: true
         readinessProbe:
           exec:
             command: [ {{ .Values.image.readinessCommand }} ]

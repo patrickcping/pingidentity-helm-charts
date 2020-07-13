@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/name: {{ include "pingdataconsole.name" . }}
+    helm.sh/chart: {{ include "pingdataconsole.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+  name: {{ include "pingdataconsole.fullname" . }}-env-vars
+data:
+  PD_ENGINE_PRIVATE_HOSTNAME: {{ .Values.pingdataconsole.directory.hostname | quote }}
+  LDAPS_PORT: {{ .Values.pingdataconsole.directory.port | quote }}
+  ROOT_USER: {{ .Values.pingdataconsole.directory.rootUser | quote }}
+{{ toYaml .Values.pingdataconsole.envs | indent 2 }}
