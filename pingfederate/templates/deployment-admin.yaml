@@ -74,17 +74,17 @@ spec:
             command: [ {{ .Values.image.livenessCommand }} ]
           initialDelaySeconds: 30
           periodSeconds: 30
-    {{- if .Values.resources }}
+    {{- if .Values.admin.resources }}
         resources:
-{{ toYaml .Values.resources | indent 12 }}
+{{ toYaml .Values.admin.resources | indent 12 }}
     {{- end }}
-    {{- if .Values.nodeSelector }}
+    {{- if .Values.admin.nodeSelector }}
       nodeSelector:
-{{ toYaml .Values.nodeSelector | indent 8 }}
+{{ toYaml .Values.admin.nodeSelector | indent 8 }}
     {{- end }}
-    {{- if .Values.tolerations }}
+    {{- if .Values.admin.tolerations }}
       tolerations:
-{{ toYaml .Values.tolerations | indent 8 }}
+{{ toYaml .Values.admin.tolerations | indent 8 }}
     {{- end }}
     {{- if not .Values.license.useDevOpsKey }}
       volumes:

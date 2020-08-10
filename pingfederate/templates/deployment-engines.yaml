@@ -75,17 +75,17 @@ spec:
           preStop:
             exec:
               command: ["/bin/sh","-c","sleep 20"]
-    {{- if .Values.resources }}
+    {{- if .Values.engine.resources }}
         resources:
-{{ toYaml .Values.resources | indent 12 }}
+{{ toYaml .Values.engine.resources | indent 12 }}
     {{- end }}
-    {{- if .Values.nodeSelector }}
+    {{- if .Values.engine.nodeSelector }}
       nodeSelector:
-{{ toYaml .Values.nodeSelector | indent 8 }}
+{{ toYaml .Values.engine.nodeSelector | indent 8 }}
     {{- end }}
-    {{- if .Values.tolerations }}
+    {{- if .Values.engine.tolerations }}
       tolerations:
-{{ toYaml .Values.tolerations | indent 8 }}
+{{ toYaml .Values.engine.tolerations | indent 8 }}
     {{- end }}
     {{- if not .Values.license.useDevOpsKey }}
       volumes:
