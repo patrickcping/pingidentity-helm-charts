@@ -71,11 +71,11 @@ spec:
 {{ toYaml .Values.resources | indent 12 }}
     {{- end }}
     {{- if .Values.nodeSelector }}
-        nodeSelector:
+      nodeSelector:
 {{ toYaml .Values.nodeSelector | indent 8 }}
     {{- end }}
     {{- if .Values.tolerations }}
-        tolerations:
+      tolerations:
 {{ toYaml .Values.tolerations | indent 8 }}
     {{- end }}
     {{- if or (.Values.persistentvolume.enabled) (not .Values.license.useDevOpsKey) }}
