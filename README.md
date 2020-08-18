@@ -33,3 +33,20 @@ Search for a Ping chart
 ```shell
 helm search repo ping
 ```
+
+## Injecting Ping Environment Variables
+
+You can inject your own environment variables to modify the behaviour of the Ping Docker image, or when using environment variables in your own server profiles.  For this, you can create your own values.yaml file and insert any environment variables you wish under (for example) `pingfederate.envs` of the chart configuration.  For example:
+
+`
+pingfederate:
+  envs:
+    SERVER_PROFILE_URL: https://github.com/myuser/mycustomrepo.git 
+    SERVER_PROFILE_PATH: my/path/to/pingfederate
+    SERVER_PROFILE_BRANCH: master
+    MY_SERVER_PROFILE_VAR: "your value here"
+`
+
+## Waiting for dependent services
+
+For an example of waiting for a dependent service, such as PingDirectory, see the example [here](https://github.com/patrickcping/ping-helm-kustomize-example)

@@ -60,3 +60,18 @@ By default this chart loads sample PingDelegator configuration on startup.  Thes
 | 1 | https://github.com/pingidentity/pingidentity-server-profiles/tree/master/baseline/pingdelegator |
 
 You can add additional layers or change to your own configuration repository by modifying the `SERVER_PROFILE_*` environment variables in `pingdelegator.envs` of the chart configuration
+
+## Injecting Ping Environment Variables
+
+You can inject your own environment variables to modify the behaviour of the Ping Docker image, or when using environment variables in your own server profiles.  For this, you can create your own values.yaml file and insert any environment variables you wish under `pingdelegator.envs` of the chart configuration.  For example:
+
+`
+pingdelegator:
+  envs:
+    SERVER_PROFILE_URL: https://github.com/myuser/mycustomrepo.git 
+    SERVER_PROFILE_PATH: my/path/to/pingdelegator
+    SERVER_PROFILE_BRANCH: master
+    MY_SERVER_PROFILE_VAR: "your value here"
+`
+
+For available image environment variables, see [Ping Identity documentation](https://pingidentity-devops.gitbook.io/devops/dockerimagesref/pingdelegator#environment-variables)
