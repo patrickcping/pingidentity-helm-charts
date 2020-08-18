@@ -16,6 +16,11 @@ pingfederate:
   logging: INFO
 
   envs:
+    # Use this block to define/redefine the server profile variables.  Also use this
+    # section to define environment variables used inside your server profiles, or in
+    # the images themselves.
+    # See https://pingidentity-devops.gitbook.io/devops/dockerimagesref/pingfederate#environment-variables
+
     SERVER_PROFILE_URL: https://github.com/pingidentity/pingidentity-server-profiles.git 
     SERVER_PROFILE_PATH: pf-dns-ping-clustering/pingfederate
     SERVER_PROFILE_BRANCH: master
@@ -34,6 +39,25 @@ pingfederate:
       clusterFailure:
         port: 7700
         name: pf-clusterf
+    
+    autoscaling:
+      enabled: false
+      minReplicas: 2
+      maxReplicas: 10
+      targetCPUUtilizationPercentage: 50
+      targetMemoryUtilizationPercentage: 50
+
+    autoscalingTemplate: []
+    # Custom or additional autoscaling metrics
+    # ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/#support-for-custom-metrics
+    # - type: Pods
+    #   pods:
+    #     metric:
+    #       name: custommetric
+    #     target:
+    #       type: AverageValue
+    #       averageValue: 10000m
+
 
 license:
   acceptEULA: no

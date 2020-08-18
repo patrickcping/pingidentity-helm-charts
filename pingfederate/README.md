@@ -49,6 +49,21 @@ By default this chart loads sample PingFederate configuration on startup.  These
 
 You can add additional layers or change to your own configuration repository by modifying the `SERVER_PROFILE_*` environment variables in `pingfederate.envs` of the chart configuration
 
+## Injecting Ping Environment Variables
+
+You can inject your own environment variables to modify the behaviour of the Ping Docker image, or when using environment variables in your own server profiles.  For this, you can create your own values.yaml file and insert any environment variables you wish under `pingfederate.envs` of the chart configuration.  For example:
+
+`
+pingfederate:
+  envs:
+    SERVER_PROFILE_URL: https://github.com/myuser/mycustomrepo.git 
+    SERVER_PROFILE_PATH: my/path/to/pingfederate
+    SERVER_PROFILE_BRANCH: master
+    MY_SERVER_PROFILE_VAR: "your value here"
+`
+
+For available image environment variables, see [Ping Identity documentation](https://pingidentity-devops.gitbook.io/devops/dockerimagesref/pingfederate#environment-variables)
+
 ## Clustering Example
 
 ```shell
@@ -63,3 +78,23 @@ pingfederate-cluster --debug \
 pingidentity-pc/pingfederate
 ```
 
+## Clustering Example, with autoscaling
+
+```shell
+helm install \
+pingfederate-cluster --debug \
+--set pingfederate.logging=DEBUG \
+--set pingfederate.clustering.enabled=true \
+--set pingfederate.clustering.autoscaling.enabled=true \
+--set pingfederate.clustering.autoscaling.minReplicas=3 \
+--set pingfederate.clustering.autoscaling.maxReplicas=5 \
+--set license.useDevOpsKey=true \
+--set license.devOpsKey.user=${PING_IDENTITY_DEVOPS_USER} \
+--set license.devOpsKey.key=${PING_IDENTITY_DEVOPS_KEY} \
+--set license.acceptEULA=yes \
+pingidentity-pc/pingfederate
+```
+
+## Waiting for dependent services
+
+For an example of waiting for a dependent service, such as PingDirectory, see the example [here](https://github.com/patrickcping/ping-helm-kustomize-example)
