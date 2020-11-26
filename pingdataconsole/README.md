@@ -1,9 +1,16 @@
+|![](https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Warning.svg/156px-Warning.svg.png) | This project is now deprecated.
+|---|---|
+
 # PingDataConsole
 
 Remember to add the repo before installing the chart
 ```shell
 helm repo add pingidentity-pc https://patrickcping.github.io/ping-identity-helm-charts-repo/
 ```
+
+## ⚠️ Deprecation Notice
+
+This repository is now deprecated and replaced by the offical [Ping Identity Helm charts](https://helm.pingidentity.com/)
 
 ## Running
 

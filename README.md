@@ -1,3 +1,6 @@
+|![](https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Warning.svg/156px-Warning.svg.png) | This project is now deprecated.
+|---|---|
+
 # Sample Ping Identity Helm Charts
 
 This repository provides sample Helm charts for Ping Identity products for community use.
@@ -5,6 +8,10 @@ This repository provides sample Helm charts for Ping Identity products for commu
 These helm charts are not in a finished or production-ready state, but are intended to be a good starting point and can be used and altered as required.
 
 Note: These charts are development / POC quality and originally put together as a learning experience.  Pull requests and issues welcome but don't expect a quick response!
+
+## ⚠️ Deprecation Notice
+
+This repository is now deprecated and replaced by the offical [Ping Identity Helm charts](https://helm.pingidentity.com/)
 
 ## Charts
 
